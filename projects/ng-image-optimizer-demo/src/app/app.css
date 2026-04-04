@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  color: #1a1a1a;
+  background: #f6f7f9;
+}
+
+main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+p {
+  margin: 0 0 1.25rem;
+  color: #444;
+  line-height: 1.5;
+}
+
+code {
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  background: #e8eaef;
+  border-radius: 4px;
+}
+
+.figure {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 16 / 10;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.08);
+}
+
+.cover {
+  object-fit: cover;
+}

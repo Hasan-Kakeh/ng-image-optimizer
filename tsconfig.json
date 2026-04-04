@@ -7,6 +7,9 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
+    "paths": {
+      "ng-image-optimizer": ["./dist/ng-image-optimizer"]
+    },
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -21,5 +24,31 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "files": []
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/ng-image-optimizer/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ng-image-optimizer/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ng-image-optimizer-demo/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/ng-image-optimizer-demo/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/core/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/core/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ng-image-optimizer/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ng-image-optimizer/tsconfig.spec.json"
+    }
+  ]
 }

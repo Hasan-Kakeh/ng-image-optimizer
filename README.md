@@ -1,59 +1,100 @@
-# NgImageOptimizer
+# 🖼️ NgImageOptimizer
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.5.
+**NgImageOptimizer** is a high-performance image optimization library for Angular SSR applications. It bridges the gap between Angular's `NgOptimizedImage` and server-side processing using [sharp](https://sharp.pixelplumbing.com/), providing a Next.js-like image optimization experience.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚦 Quick Start
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The fastest way to get started is using our automated schematic:
 
 ```bash
-ng generate component component-name
+ng add ng-image-optimizer
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## ✨ Features
+
+- **🚀 Performance**: Automatic resizing, format conversion (WebP/AVIF), and quality adjustment.
+- **⚡ Seamless Integration**: Works directly with Angular's built-in `NgOptimizedImage` directive.
+- **💾 Advanced Caching**: Persistent file-based caching with LRU (Least Recently Used) logic to minimize server load.
+- **🛡️ Secure by Default**: Built-in Content Security Policy (CSP) headers and SVG protection.
+- **🛠️ Automated Setup**: Includes an `ng add` schematic for zero-config integration.
+- **🌍 Remote Image Support**: Securely fetch and optimize images from external domains via allowlists.
+
+---
+
+This command will:
+
+1. Install necessary dependencies (`sharp`, `lru-cache`).
+2. Register the image loader in your `app.config.ts`.
+3. Configure the optimization middleware in your Express `server.ts`.
+
+---
+
+## 🏗️ Architecture
+
+NgImageOptimizer consists of two main parts:
+
+### 1. Client-Side Loader
+
+A custom `IMAGE_LOADER` that transforms Angular's image requests into optimization queries (e.g., `/_ng/image?url=...&w=1080&q=75`).
+
+### 2. Server-Side Middleware
+
+An Express middleware that intercept requests, fetches the source image (local or remote), optimizes it using `sharp`, and caches the result for future hits.
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant Express as Server (Express)
+    participant Sharp as Optimizer (Sharp)
+    participant Disk as Cache (File System)
+
+    Browser->>Express: GET /_ng/image?url=me.jpg&w=640
+    Express->>Disk: Check Cache (Hash)
+    alt Cache Hit
+        Disk-->>Express: Return Cached Buffer
+        Express-->>Browser: 200 OK (X-Cache: HIT)
+    else Cache Miss
+        Express->>Express: Fetch Original Image
+        Express->>Sharp: Resize & Compress
+        Sharp-->>Express: Optimized Buffer
+        Express->>Disk: Save to Cache
+        Express-->>Browser: 200 OK (X-Cache: MISS)
+    end
+```
+
+<!-- --- -->
+
+<!-- ## 📖 Documentation & Examples -->
+
+<!-- For detailed configuration, manual setup, and API references, please check the [Library Documentation](file:///c:/Users/LOQ/Desktop/Projects/ng-image-optimizer/projects/ng-image-optimizer/README.md). -->
+
+---
+
+## 🛠️ Development
+
+### Prerequisites
+
+- Node.js (v18+)
+- Angular CLI
+- Angular SSR
+
+<!-- ### Commands
 
 ```bash
-ng generate --help
+# Build the library
+ng build ng-image-optimizer
+
+# Run the demo application
+ng serve ng-image-optimizer-demo
+
+# Run tests
+ng test ng-image-optimizer
 ```
 
-## Building
+--- -->
 
-To build the project run:
+## 📄 License
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT © [hasan-kakeh](https://github.com/hasan-kakeh)
