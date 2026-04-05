@@ -48,11 +48,7 @@ Register the image loader in your `app.config.ts`:
 import { provideImageOptimizerLoader } from 'ng-image-optimizer';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideImageOptimizerLoader({
-      routePrefix: '/_ng/image', // Must match server-side route
-    }),
-  ],
+  providers: [provideImageOptimizerLoader()],
 };
 ```
 
@@ -131,28 +127,28 @@ Use standard Angular `NgOptimizedImage` in your templates. The library will auto
 
 When registering `provideImageOptimizerLoader`, you can pass the following options:
 
-| Property | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `routePrefix` | `string` | `/_ng/image` | The path where the image optimizer middleware is mounted. |
-| `defaultWidth` | `number` | `1080` | The default width used if `NgOptimizedImage` doesn't provide one. |
-| `defaultQuality` | `number` | `90` | The default image quality (1-100). |
+| Property         | Type     | Default      | Description                                                       |
+| :--------------- | :------- | :----------- | :---------------------------------------------------------------- |
+| `routePrefix`    | `string` | `/_ng/image` | The path where the image optimizer middleware is mounted.         |
+| `defaultWidth`   | `number` | `1080`       | The default width used if `NgOptimizedImage` doesn't provide one. |
+| `defaultQuality` | `number` | `90`         | The default image quality (1-100).                                |
 
 ### Server Middleware (`ImageConfig`)
 
 When initializing `imageOptimizerHandler`, you can pass an optional configuration object:
 
-| Property | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `deviceSizes` | `number[]` | `[640, 750, 828, ...]` | Allowed widths for device breakpoints. |
-| `imageSizes` | `number[]` | `[16, 32, 48, ...]` | Allowed widths for smaller UI elements. |
-| `remotePatterns` | `RemotePattern[]` | `[]` | List of allowed external domains. |
-| `localPatterns` | `LocalPattern[]` | `[]` | List of allowed local path patterns. |
-| `minimumCacheTTL` | `number` | `14400` (4h) | Minimum time (seconds) to cache an image. |
-| `formats` | `string[]` | `['image/webp']` | Favored output formats (supports webp/avif). |
-| `dangerouslyAllowSVG` | `boolean` | `false` | Whether to allow processing SVG images. |
-| `contentSecurityPolicy` | `string` | `...` | CSP headers for the served images. |
-| `contentDispositionType` | `'inline'\|'attachment'` | `'inline'` | How the browser should handle the image. |
-| `maxCacheSize` | `number` | `52428800` (50MB) | Maximum size of the internal LRU cache. |
+| Property                 | Type                     | Default                | Description                                  |
+| :----------------------- | :----------------------- | :--------------------- | :------------------------------------------- |
+| `deviceSizes`            | `number[]`               | `[640, 750, 828, ...]` | Allowed widths for device breakpoints.       |
+| `imageSizes`             | `number[]`               | `[16, 32, 48, ...]`    | Allowed widths for smaller UI elements.      |
+| `remotePatterns`         | `RemotePattern[]`        | `[]`                   | List of allowed external domains.            |
+| `localPatterns`          | `LocalPattern[]`         | `[]`                   | List of allowed local path patterns.         |
+| `minimumCacheTTL`        | `number`                 | `14400` (4h)           | Minimum time (seconds) to cache an image.    |
+| `formats`                | `string[]`               | `['image/webp']`       | Favored output formats (supports webp/avif). |
+| `dangerouslyAllowSVG`    | `boolean`                | `false`                | Whether to allow processing SVG images.      |
+| `contentSecurityPolicy`  | `string`                 | `...`                  | CSP headers for the served images.           |
+| `contentDispositionType` | `'inline'\|'attachment'` | `'inline'`             | How the browser should handle the image.     |
+| `maxCacheSize`           | `number`                 | `52428800` (50MB)      | Maximum size of the internal LRU cache.      |
 
 ---
 
