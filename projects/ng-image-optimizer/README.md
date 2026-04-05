@@ -80,39 +80,6 @@ server.get('/_ng/image', imageOptimizerHandler(browserDistFolder));
 - **🛠️ Automated Setup**: Includes an `ng add` schematic for zero-config integration.
 - **🌍 Remote Image Support**: Securely fetch and optimize images from external domains via allowlists.
 
-## 🏗️ Architecture
-
-NgImageOptimizer consists of two main parts:
-
-### 1. Client-Side Loader
-
-A custom `IMAGE_LOADER` that transforms Angular's image requests into optimization queries (e.g., `/_ng/image?url=...&w=1080&q=75`).
-
-### 2. Server-Side Middleware
-
-An Express middleware that intercept requests, fetches the source image (local or remote), optimizes it using `sharp`, and caches the result for future hits.
-
-```mermaid
-sequenceDiagram
-    participant Browser
-    participant Express as Server (Express)
-    participant Sharp as Optimizer (Sharp)
-    participant Disk as Cache (File System)
-
-    Browser->>Express: GET /_ng/image?url=me.jpg&w=640
-    Express->>Disk: Check Cache (Hash)
-    alt Cache Hit
-        Disk-->>Express: Return Cached Buffer
-        Express-->>Browser: 200 OK (X-Cache: HIT)
-    else Cache Miss
-        Express->>Express: Fetch Original Image
-        Express->>Sharp: Resize & Compress
-        Sharp-->>Express: Optimized Buffer
-        Express->>Disk: Save to Cache
-        Express-->>Browser: 200 OK (X-Cache: MISS)
-    end
-```
-
 ---
 
 ## 🛞 Usage
