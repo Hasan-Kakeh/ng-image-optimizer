@@ -14,7 +14,7 @@ import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { addRootProvider } from '@schematics/angular/utility';
 
 const SHARP_VERSION = '^0.34.5';
-const LRU_CACHE_VERSION = '^11.2.7';
+// const LRU_CACHE_VERSION = '^11.2.7';
 
 export function ngAdd(options: { project: string }): Rule {
   return async (tree: Tree) => {
@@ -46,7 +46,7 @@ function addDependencies(): Rule {
   return (tree: Tree, context: SchematicContext) => {
     const dependencies = [
       { name: 'sharp', version: SHARP_VERSION },
-      { name: 'lru-cache', version: LRU_CACHE_VERSION },
+      // { name: 'lru-cache', version: LRU_CACHE_VERSION },
     ];
 
     dependencies.forEach((dep) => {

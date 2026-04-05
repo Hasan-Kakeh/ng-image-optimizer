@@ -1,33 +1,31 @@
 {
   "name": "ng-image-optimizer",
-  "version": "0.0.2",
+  "version": "0.0.3-beta",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "^21.2.0",
-    "@angular/core": "^21.2.0",
-    "lru-cache": "^11.2.7",
+    "@angular/common": ">=18.0.0",
+    "@angular/core": ">=18.0.0",
     "sharp": "^0.34.5"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "lru-cache": "^11.2.7"
   },
   "schematics": "./schematics/collection.json",
   "ng-add": {
     "save": "dependencies"
   },
+  "exports": {
+    "./schematics": "./schematics/collection.json"
+  },
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18 <23"
+  },
   "scripts": {
     "prebuild": "ng build",
     "build": "tsc -p tsconfig.schematics.json",
-    "postbuild": "copyfiles schematics/*/schema.json schematics/*/files/** schematics/collection.json schematics/package.json ../../dist/ng-image-optimizer/"
-  },
-  "devDependencies": {
-    "@angular-devkit/core": "^21.2.0",
-    "@angular-devkit/schematics": "^21.2.0",
-    "@schematics/angular": "^21.2.0",
-    "@types/jasmine": "^6.0.0",
-    "@types/node": "^22.0.0",
-    "copyfiles": "file:../../node_modules/copyfiles",
-    "typescript": "file:../../node_modules/typescript"
+    "postbuild": "copyfiles schematics/*/schema.json schematics/*/files/** schematics/collection.json ../../dist/ng-image-optimizer/"
   },
   "sideEffects": false
 }
