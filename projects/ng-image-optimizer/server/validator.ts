@@ -56,8 +56,7 @@ export function validateParams(
       return { errorMessage: '"url" parameter is invalid' };
     }
 
-    // remotePatterns check
-    if (config.remotePatterns.length > 0 && !hasRemoteMatch(config.remotePatterns, hrefParsed)) {
+    if (!hasRemoteMatch(config.remotePatterns, hrefParsed)) {
       return { errorMessage: '"url" parameter is not allowed' };
     }
   }
