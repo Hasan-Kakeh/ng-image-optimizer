@@ -37,18 +37,6 @@
     },
     {
       "path": "./projects/ng-image-optimizer-demo/tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/core/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/core/tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/ng-image-optimizer/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/ng-image-optimizer/tsconfig.spec.json"
     }
   ]
 }
