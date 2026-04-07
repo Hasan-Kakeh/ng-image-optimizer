@@ -4,7 +4,7 @@ import path from 'node:path';
 import { LRUCache } from 'lru-cache';
 import { defaultConfig } from './config';
 
-const CACHE_DIR = path.join(process.cwd(), '.image-cache');
+const CACHE_DIR = path.join(process.cwd(), '.angular', 'cache', 'image-cache');
 
 if (!existsSync(CACHE_DIR)) {
   mkdirSync(CACHE_DIR, { recursive: true });

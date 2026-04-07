@@ -4,6 +4,6 @@
  */
 
 export { imageOptimizerHandler } from './handler';
-export type { ImageConfig } from './config';
+export type { ImageConfig, RemotePattern, LocalPattern } from './config';
 export { defaultConfig } from './config';
 export { ImageError } from './utils';

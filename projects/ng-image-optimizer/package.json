@@ -1,6 +1,6 @@
 {
   "name": "ng-image-optimizer",
-  "version": "0.0.6-beta",
+  "version": "0.0.7",
   "description": "High-performance image optimization for Angular SSR. Includes a custom IMAGE_LOADER for NgOptimizedImage and Express middleware powered by sharp.",
   "license": "MIT",
   "type": "commonjs",
@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "tslib": "^2.3.0",
-    "lru-cache": "^11.2.7"
+    "lru-cache": "^11.2.7",
+    "picomatch": "^4.0.4"
   },
   "optionalDependencies": {
     "sharp": "^0.34.5"

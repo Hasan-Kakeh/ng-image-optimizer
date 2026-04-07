@@ -1,5 +1,7 @@
 import type { IncomingMessage } from 'node:http';
 import { ImageConfig } from './config';
+import { hasRemoteMatch } from './match-remote-pattern';
+import { hasLocalMatch } from './match-local-pattern';
 
 export interface ImageParamsResult {
   href: string;
@@ -35,12 +37,8 @@ export function validateParams(
       return { errorMessage: '"url" parameter cannot be recursive' };
     }
     if (config.localPatterns) {
-      const localPatternMatch = config.localPatterns.some((pattern) => {
-        const { pathname, search } = pattern;
-        return url.startsWith(pathname) && (search ? url.includes(search) : true);
-      });
-      if (localPatternMatch) {
-        return { errorMessage: 'url parameter matches a local pattern' };
+      if (!hasLocalMatch(config.localPatterns, url)) {
+        return { errorMessage: '"url" parameter is not allowed' };
       }
     }
   } else {
@@ -59,8 +57,7 @@ export function validateParams(
     }
 
     // remotePatterns check
-    const matchesPattern = config.remotePatterns.some((p) => p.hostname === hrefParsed.hostname);
-    if (config.remotePatterns.length > 0 && !matchesPattern) {
+    if (config.remotePatterns.length > 0 && !hasRemoteMatch(config.remotePatterns, hrefParsed)) {
       return { errorMessage: '"url" parameter is not allowed' };
     }
   }

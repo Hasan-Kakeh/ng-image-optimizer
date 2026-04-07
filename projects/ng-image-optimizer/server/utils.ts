@@ -1,5 +1,9 @@
 import { createHash } from 'node:crypto';
 
+/**
+ * Custom error class for image optimization failures.
+ * Includes an HTTP status code to indicate the type of error.
+ */
 export class ImageError extends Error {
   statusCode: number;
 

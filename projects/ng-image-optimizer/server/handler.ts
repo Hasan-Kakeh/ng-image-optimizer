@@ -8,6 +8,14 @@ import { fetchExternalImage, fetchInternalImage } from './fetcher';
 import { readFromCacheDir, writeToCacheDir } from './cache';
 import { optimizeImage } from './optimizer';
 
+/**
+ * Express middleware handler for image optimization.
+ * Intercepts image requests, processes them using sharp, and caches the results.
+ *
+ * @param browserDistFolder - The absolute path to the Angular application's browser distribution folder. Used to resolve local image requests.
+ * @param options - Optional configuration object to customize image optimization behavior.
+ * @returns An Express middleware function that handles image optimization requests.
+ */
 export const imageOptimizerHandler = (
   browserDistFolder: string,
   options?: Partial<ImageConfig>,
