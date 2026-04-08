@@ -1,5 +1,12 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, ChangeDetectionStrategy, signal, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  inject,
+  PLATFORM_ID,
+  REQUEST,
+} from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -19,17 +26,17 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         <h4 class="sidebar-title">Getting Started</h4>
         <ul class="sidebar-links">
           <li>
-            <a routerLink="/docs/introduction" routerLinkActive="active" class="sidebar-link"
+            <a routerLink="/introduction" routerLinkActive="active" class="sidebar-link"
               >Introduction</a
             >
           </li>
           <li>
-            <a routerLink="/docs/installation" routerLinkActive="active" class="sidebar-link"
+            <a routerLink="/installation" routerLinkActive="active" class="sidebar-link"
               >Installation</a
             >
           </li>
           <li>
-            <a routerLink="/docs/configuration" routerLinkActive="active" class="sidebar-link"
+            <a routerLink="/configuration" routerLinkActive="active" class="sidebar-link"
               >Configuration</a
             >
           </li>
@@ -40,9 +47,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         <h4 class="sidebar-title">Usage & Guides</h4>
         <ul class="sidebar-links">
           <li>
-            <a routerLink="/docs/examples" routerLinkActive="active" class="sidebar-link"
-              >Examples</a
-            >
+            <a routerLink="/examples" routerLinkActive="active" class="sidebar-link">Examples</a>
           </li>
         </ul>
       </div>
@@ -168,9 +173,22 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   ],
 })
 export class SidebarComponent {
-  platform = inject(PLATFORM_ID);
+  private platformId = inject(PLATFORM_ID);
+  private request = inject(REQUEST, { optional: true }); // Inject the SSR request
+  // Detect mobile on both server (via User-Agent) and browser (via window width)
+  private getInitialMobileState(): boolean {
+    if (isPlatformBrowser(this.platformId)) {
+      return window.innerWidth < 768;
+    }
 
-  isMobile = isPlatformBrowser(this.platform) ? window?.innerWidth < 768 : false;
+    if (isPlatformServer(this.platformId) && this.request) {
+      const userAgent = this.request.headers.get('user-agent') || '';
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+    }
+
+    return false;
+  }
+  isMobile = this.getInitialMobileState();
   readonly isCollapsed = signal(this.isMobile);
 
   toggle() {

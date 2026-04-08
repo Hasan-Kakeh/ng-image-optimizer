@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
     <header class="top-nav">
       <div class="nav-container">
         <a routerLink="/" class="logo">
-          <img src="/angular-logo.png" alt="logo" width="42" height="42" />
+          <img src="angular-logo.webp" alt="logo" width="42" height="42" />
           <span class="logo-text">Ng Image Optimizer</span>
         </a>
         <nav class="nav-links">
@@ -18,6 +18,7 @@ import { RouterLink } from '@angular/router';
             href="https://www.npmjs.com/package/ng-image-optimizer"
             target="_blank"
             class="nav-link"
+            title="npm"
             ><svg
               width="48"
               height="48"
@@ -37,6 +38,7 @@ import { RouterLink } from '@angular/router';
             target="_blank"
             rel="noopener noreferrer"
             class="nav-link"
+            title="github"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
