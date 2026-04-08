@@ -1,4 +1,4 @@
-import{a as s}from"./chunk-QMRSLMJN.js";import{Ga as r,Ha as t,Ia as i,Ja as n,Ta as e,ma as o,xa as p}from"./chunk-DMYT7VPL.js";var d=class l{appConfigCode=`import { ApplicationConfig } from '@angular/core';
+import{a as s}from"./chunk-CJ3XHCR2.js";import{Ga as r,Ha as t,Ia as i,Ja as n,Ta as e,ma as o,xa as p}from"./chunk-DMYT7VPL.js";var d=class l{appConfigCode=`import { ApplicationConfig } from '@angular/core';
 import { provideImageOptimizerLoader } from 'ng-image-optimizer';
 
 export const appConfig: ApplicationConfig = {
