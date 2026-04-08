@@ -4,6 +4,23 @@
 
 ---
 
+[**📖 View Documentation**](https://hasan-kakeh.github.io/ng-image-optimizer/)
+
+---
+
+## 🧐 Why NgImageOptimizer?
+
+Angular's `NgOptimizedImage` is great, but it requires an external image loader (like Cloudinary or Imgix) to perform actual optimizations like resizing and format conversion. **NgImageOptimizer** brings that power to your own Angular SSR server, allowing you to:
+
+- 🚀 **Self-host** your image optimization service.
+- 📉 **Reduce LCP** with automatic resizing and modern formats (WebP/AVIF).
+- 💾 **Optimize once, serve many** with advanced LRU file caching.
+- 🛡️ **Stay secure** with domain allowlists and SVG protection.
+- 🌍 **Remote Image Support**: Securely fetch and optimize images from external domains via allowlists.
+- 🛠️ **Automated Setup**: Includes an `ng add` schematic for zero-config integration.
+
+---
+
 ### Prerequisites
 
 - Node.js (v18+)
@@ -71,7 +88,7 @@ server.get('/_ng/image', imageOptimizerHandler(browserDistFolder));
 
 ---
 
-## ✨ Features
+<!-- ## ✨ Features
 
 - **🚀 Performance**: Automatic resizing, format conversion (WebP/AVIF), and quality adjustment.
 - **⚡ Seamless Integration**: Works directly with Angular's built-in `NgOptimizedImage` directive.
@@ -80,7 +97,7 @@ server.get('/_ng/image', imageOptimizerHandler(browserDistFolder));
 - **🛠️ Automated Setup**: Includes an `ng add` schematic for zero-config integration.
 - **🌍 Remote Image Support**: Securely fetch and optimize images from external domains via allowlists.
 
----
+--- -->
 
 ## 🛞 Usage
 

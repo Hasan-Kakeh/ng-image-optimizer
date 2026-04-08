@@ -2,6 +2,8 @@
 
 **NgImageOptimizer** is a high-performance image optimization library for Angular SSR applications. It bridges the gap between Angular's `NgOptimizedImage` and server-side processing using [sharp](https://sharp.pixelplumbing.com/), providing a Next.js-like image optimization experience.
 
+[**Documentation**](https://hasan-kakeh.github.io/ng-image-optimizer/)
+
 ---
 
 ### Prerequisites

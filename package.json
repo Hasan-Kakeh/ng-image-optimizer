@@ -7,6 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "build:demo": "ng build --configuration=production --base-href=\"https://hasan-kakeh.github.io/ng-image-optimizer/\"",
+    "deploy": " npx angular-cli-ghpages --dir=dist/ng-image-optimizer-demo/browser",
     "serve:ssr:ng-image-optimizer-demo": "node dist/ng-image-optimizer-demo/server/server.mjs"
   },
   "private": true,
