@@ -1,4 +1,4 @@
-import{a as s}from"./chunk-QYBKMJI2.js";import{Ga as o,Ha as t,Ia as i,Ja as a,Ta as e,ma as n,xa as d}from"./chunk-X6LUOPOU.js";var p=class m{basicCode=`<img [ngSrc]="'hero.webp'" width="1200" height="600" alt="Hero image" />`;fillCode=`<div style="height: 300px; position: relative;">
+import{a as s}from"./chunk-QMRSLMJN.js";import{Ga as o,Ha as t,Ia as i,Ja as a,Ta as e,ma as n,xa as d}from"./chunk-DMYT7VPL.js";var p=class m{basicCode=`<img [ngSrc]="'hero.webp'" width="1200" height="600" alt="Hero image" />`;fillCode=`<div style="height: 300px; position: relative;">
   <img [ngSrc]="'background.avif'" fill style="object-fit: cover;" alt="Background" />
 </div>`;priorityCode=`<img [ngSrc]="'logo.png'" width="200" height="50" priority alt="Brand logo" />`;qualityCode=`<img 
   [ngSrc]="'photo.jpg'" 

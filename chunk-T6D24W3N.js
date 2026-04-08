@@ -1,4 +1,4 @@
-import{a as d}from"./chunk-QYBKMJI2.js";import{Ga as r,Ha as t,Ia as i,Ja as o,Ta as e,ma as m,xa as l}from"./chunk-X6LUOPOU.js";var s=class a{remotePatternsCode=`import { imageOptimizerHandler } from 'ng-image-optimizer/server';
+import{a as d}from"./chunk-QMRSLMJN.js";import{Ga as r,Ha as t,Ia as i,Ja as o,Ta as e,ma as m,xa as l}from"./chunk-DMYT7VPL.js";var s=class a{remotePatternsCode=`import { imageOptimizerHandler } from 'ng-image-optimizer/server';
 
 app.get('/_ng/image', imageOptimizerHandler(browserDistFolder, {
   remotePatterns: [
