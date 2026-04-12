@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
     <header class="top-nav">
       <div class="nav-container">
         <a routerLink="/" class="logo">
-          <img src="angular-logo.webp" alt="logo" width="42" height="42" />
+          <img src="angular-logo.webp" alt="angular" width="42" height="42" />
           <span class="logo-text">Ng Image Optimizer</span>
         </a>
         <nav class="nav-links">

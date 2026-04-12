@@ -68,9 +68,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         transition: padding var(--transition-normal);
         overflow-x: hidden;
       }
-      :host.collapsed .sidebar {
-        padding: 0 12px;
-      }
+
       .sidebar-title {
         font-size: 0.875rem;
         font-weight: 600;
@@ -79,10 +77,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         white-space: nowrap;
         transition: opacity var(--transition-fast);
       }
-      :host.collapsed .sidebar-title {
-        opacity: 0;
-        pointer-events: none;
-      }
+
       .sidebar-links {
         list-style: none;
         display: flex;
@@ -101,9 +96,26 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         text-overflow: ellipsis;
         transition: all var(--transition-fast);
       }
-      :host.collapsed .sidebar-link {
-        opacity: 0;
-        pointer-events: none;
+      @media (max-width: 768px) {
+        :host.collapsed .sidebar-link {
+          opacity: 0;
+          pointer-events: none;
+        }
+        :host.collapsed .sidebar-title {
+          opacity: 0;
+          pointer-events: none;
+        }
+        :host.collapsed .sidebar {
+          padding: 0 12px;
+        }
+        :host.collapsed .sidebar-footer {
+          opacity: 0;
+          pointer-events: none;
+        }
+        :host.collapsed .chevron {
+          transform: rotate(-135deg);
+          margin-left: -2px;
+        }
       }
       .sidebar-link:hover {
         color: var(--text-primary);
@@ -123,10 +135,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         white-space: nowrap;
         transition: opacity var(--transition-fast);
       }
-      :host.collapsed .sidebar-footer {
-        opacity: 0;
-        pointer-events: none;
-      }
+
       .sidebar-footer .heart {
         color: #ff4b4b;
       }
@@ -151,6 +160,9 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         color: var(--text-primary);
         z-index: 10;
         transition: all var(--transition-normal);
+        @media (min-width: 768px) {
+          display: none;
+        }
       }
       .sidebar-toggle:hover {
         background-color: var(--accent-secondary);
@@ -164,10 +176,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         transform: rotate(45deg);
         margin-left: 2px;
         transition: transform var(--transition-normal);
-      }
-      :host.collapsed .chevron {
-        transform: rotate(-135deg);
-        margin-left: -2px;
       }
     `,
   ],
@@ -189,7 +197,7 @@ export class SidebarComponent {
     return false;
   }
   isMobile = this.getInitialMobileState();
-  readonly isCollapsed = signal(this.isMobile);
+  readonly isCollapsed = signal(true);
 
   toggle() {
     this.isCollapsed.update((v) => !v);

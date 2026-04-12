@@ -5,10 +5,10 @@
 
 :root {
   /* Color Palette */
-  --bg-primary: #000000;
+  --bg-primary: #0f0f11;
   --bg-secondary: #111111;
   --bg-tertiary: #222222;
-  --bg-glass: rgba(0, 0, 0, 0.7);
+  --bg-glass: #0f0f11b3;
 
   --text-primary: #ededed;
   --text-secondary: #a1a1aa;
@@ -30,7 +30,8 @@
 
   /* Typography */
   --font-sans:
-    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Layout Spacing */
@@ -58,7 +59,15 @@
   margin: 0;
   padding: 0;
 }
-
+/* Create a 'smoothed' fallback for Inter */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  ascent-override: 90%;
+  descent-override: 22.5%;
+  line-gap-override: 0%;
+  size-adjust: 107%; /* Adjusts Arial to match Inter's scale */
+}
 html,
 body {
   background-color: var(--bg-primary);
@@ -71,6 +80,9 @@ body {
   height: 100%;
 }
 
+body {
+  font-family: 'Inter', 'Inter Fallback', sans-serif;
+}
 a {
   color: var(--text-primary);
   text-decoration: none;
@@ -130,8 +142,10 @@ a:hover {
   z-index: 100;
 }
 
-.sidebar-container.collapsed {
-  width: var(--sidebar-collapsed-width);
+@media (max-width: 768px) {
+  .sidebar-container.collapsed {
+    width: var(--sidebar-collapsed-width);
+  }
 }
 
 .content-container {
@@ -143,8 +157,10 @@ a:hover {
   transition: margin-left var(--transition-normal);
 }
 
-.sidebar-container.collapsed + .content-container {
-  margin-left: var(--sidebar-collapsed-width);
+@media (max-width: 768px) {
+  .sidebar-container.collapsed + .content-container {
+    margin-left: var(--sidebar-collapsed-width);
+  }
 }
 
 /* Typography styles */
