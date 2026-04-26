@@ -1,3 +1,5 @@
+import { deviceSizes, imageSizes } from './size-config';
+
 /**
  * Configuration for allowing specific external domains for image optimization.
  * Used to restrict which remote URLs the optimizer will fetch and process.
@@ -60,8 +62,8 @@ export interface ImageConfig {
  * Can be overridden by passing custom options to the handler.
  */
 export const defaultConfig: ImageConfig = {
-  deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920, 2048],
-  imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  deviceSizes: deviceSizes,
+  imageSizes: imageSizes,
   remotePatterns: [],
   minimumCacheTTL: 14400,
   formats: ['image/webp'],

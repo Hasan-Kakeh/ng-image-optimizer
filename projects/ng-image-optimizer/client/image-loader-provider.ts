@@ -1,6 +1,7 @@
 import type { ImageLoader, ImageLoaderConfig } from '@angular/common';
-import { IMAGE_LOADER } from '@angular/common';
+import { IMAGE_CONFIG, IMAGE_LOADER } from '@angular/common';
 import type { Provider } from '@angular/core';
+import { deviceSizes, imageSizes } from '../server/size-config';
 /**
  * Matches the server optimizer query shape (`validateParams`):
  * `GET <routePrefix>?url=<href>&w=<px>&q=<1-100>`.
@@ -64,8 +65,16 @@ export function imageOptimizerLoader(
  * Registers {@link imageOptimizerLoader} as `IMAGE_LOADER`.
  */
 export function provideImageOptimizerLoader(options: ImageOptimizerLoaderOptions = {}): Provider {
-  return {
-    provide: IMAGE_LOADER,
-    useValue: imageOptimizerLoader(options),
-  };
+  return [
+    {
+      provide: IMAGE_LOADER,
+      useValue: imageOptimizerLoader(options),
+    },
+    {
+      provide: IMAGE_CONFIG,
+      useValue: {
+        breakpoints: [...imageSizes, ...deviceSizes],
+      },
+    },
+  ];
 }
