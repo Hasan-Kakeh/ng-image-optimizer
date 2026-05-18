@@ -1,7 +1,10 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'introduction', pathMatch: 'full' },
+  {
+    path: '', loadComponent: () =>
+      import('./pages/getting-started.component').then((m) => m.GettingStartedComponent),
+  },
   {
     path: 'introduction',
     loadComponent: () =>
