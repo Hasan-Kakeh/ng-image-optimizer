@@ -154,6 +154,30 @@ When initializing `imageOptimizerHandler`, you can pass an optional configuratio
 
 ---
 
+## 🏗️ AOT (Ahead-of-Time) Pre-optimization
+
+For static sites (SSG) or cases where you want to avoid dynamic processing, use the built-in CLI to pre-optimize your images.
+
+### 1. Run the CLI
+
+Execute the optimizer against your `dist` folder:
+
+```bash
+npx ng-image-optimizer-aot --dist ./dist/browser
+```
+
+### 2. Client Setup
+
+Configure the loader to use the pre-optimized static files:
+
+```typescript
+provideImageOptimizerLoader({
+  aot: { format: 'webp', quality: 90 },
+});
+```
+
+---
+
 ## 📄 License
 
 ng-image-optimizer is an open source package released under the MIT license. See the LICENSE file for more information.

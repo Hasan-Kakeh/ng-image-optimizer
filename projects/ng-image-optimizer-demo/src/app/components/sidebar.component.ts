@@ -31,26 +31,76 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
             >
           </li>
           <li>
-            <a routerLink="/installation" routerLinkActive="active" class="sidebar-link"
-              >Installation</a
+            <a routerLink="/which-mode" routerLinkActive="active" class="sidebar-link"
+              >Which Mode?</a
             >
           </li>
           <li>
-            <a routerLink="/configuration" routerLinkActive="active" class="sidebar-link"
-              >Configuration</a
+            <a routerLink="/installation" routerLinkActive="active" class="sidebar-link"
+              >Installation</a
             >
           </li>
         </ul>
       </div>
 
       <div class="sidebar-group">
-        <h4 class="sidebar-title">Usage & Guides</h4>
+        <h4 class="sidebar-title">SSR / Dynamic</h4>
         <ul class="sidebar-links">
           <li>
-            <a routerLink="/examples" routerLinkActive="active" class="sidebar-link">Examples</a>
+            <a routerLink="/ssr/setup" routerLinkActive="active" class="sidebar-link">Setup</a>
+          </li>
+          <li>
+            <a routerLink="/ssr/configuration" routerLinkActive="active" class="sidebar-link"
+              >Configuration</a
+            >
+          </li>
+          <li>
+            <a routerLink="/ssr/remote-images" routerLinkActive="active" class="sidebar-link"
+              >Remote Images</a
+            >
+          </li>
+          <li>
+            <a routerLink="/ssr/examples" routerLinkActive="active" class="sidebar-link">Examples</a>
           </li>
         </ul>
       </div>
+
+      <div class="sidebar-group">
+        <h4 class="sidebar-title">AOT / Build</h4>
+        <ul class="sidebar-links">
+          <li>
+            <a routerLink="/aot/setup" routerLinkActive="active" class="sidebar-link">Setup</a>
+          </li>
+          <li>
+            <a routerLink="/aot/cli" routerLinkActive="active" class="sidebar-link">CLI Reference</a>
+          </li>
+          <li>
+            <a routerLink="/aot/naming" routerLinkActive="active" class="sidebar-link"
+              >Naming Convention</a
+            >
+          </li>
+          <li>
+            <a routerLink="/aot/examples" routerLinkActive="active" class="sidebar-link">Examples</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-group">
+        <h4 class="sidebar-title">Shared Reference</h4>
+        <ul class="sidebar-links">
+          <li>
+            <a routerLink="/reference/breakpoints" routerLinkActive="active" class="sidebar-link"
+              >Breakpoint Matrix</a
+            >
+          </li>
+          <li>
+            <a routerLink="/reference/cls" routerLinkActive="active" class="sidebar-link"
+              >CLS Prevention</a
+            >
+          </li>
+        </ul>
+      </div>
+
       <div class="sidebar-footer">
         Developed with <span class="heart">♥</span> by
         <a href="https://www.linkedin.com/in/hasan-kakeh/" target="_blank">Hasan Kakeh</a>
@@ -143,7 +193,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         color: var(--text-primary);
       }
 
-      /* Toggle Button */
       .sidebar-toggle {
         position: absolute;
         right: 12px;
@@ -182,8 +231,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class SidebarComponent {
   private platformId = inject(PLATFORM_ID);
-  private request = inject(REQUEST, { optional: true }); // Inject the SSR request
-  // Detect mobile on both server (via User-Agent) and browser (via window width)
+  private request = inject(REQUEST, { optional: true });
   private getInitialMobileState(): boolean {
     if (isPlatformBrowser(this.platformId)) {
       return window.innerWidth < 768;

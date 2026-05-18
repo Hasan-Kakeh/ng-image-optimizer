@@ -13,10 +13,12 @@ import {
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { addRootProvider } from '@schematics/angular/utility';
 
+import { Schema } from './schema';
+
 const SHARP_VERSION = '^0.34.5';
 // const LRU_CACHE_VERSION = '^11.2.7';
 
-export function ngAdd(options: { project: string }): Rule {
+export function ngAdd(options: Schema): Rule {
   return async (tree: Tree) => {
     const workspace = await getWorkspace(tree);
 
@@ -34,11 +36,19 @@ export function ngAdd(options: { project: string }): Rule {
       throw new SchematicsException('No project found in the workspace.');
     }
 
-    return chain([
+    const rules: Rule[] = [
       addDependencies(),
-      addProviderToAppConfig(options.project),
-      addMiddlewareToServer(options.project),
-    ]);
+      addProviderToAppConfig(options.project, options.mode),
+    ];
+
+    // Defaults to SSR if mode is not provided or explicitly set to SSR
+    if (!options.mode || options.mode === 'SSR') {
+      rules.push(addMiddlewareToServer(options.project));
+    } else if (options.mode === 'AOT') {
+      rules.push(addAotScript(options.project));
+    }
+
+    return chain(rules);
   };
 }
 
@@ -63,7 +73,7 @@ function addDependencies(): Rule {
   };
 }
 
-function addProviderToAppConfig(projectName: string): Rule {
+function addProviderToAppConfig(projectName: string, mode?: 'SSR' | 'AOT'): Rule {
   return async (tree: Tree) => {
     const workspace = await getWorkspace(tree);
     const project = workspace.projects.get(projectName);
@@ -73,6 +83,9 @@ function addProviderToAppConfig(projectName: string): Rule {
     }
 
     return addRootProvider(projectName, ({ code, external }: any) => {
+      if (mode === 'AOT') {
+        return code`${external('provideAotImageLoader', 'ng-image-optimizer')}()`;
+      }
       return code`${external('provideImageOptimizerLoader', 'ng-image-optimizer')}()`;
     });
   };
@@ -147,6 +160,50 @@ function addMiddlewareToServer(projectName: string): Rule {
       context.logger.warn(
         `Could not find "const app = express();" in ${ssrEntry} to auto-inject middleware.`,
       );
+    }
+  };
+}
+
+function addAotScript(projectName: string): Rule {
+  return async (tree: Tree, context: SchematicContext) => {
+    const workspace = await getWorkspace(tree);
+    const project = workspace.projects.get(projectName);
+
+    if (!project) {
+      return;
+    }
+
+    const buildTarget = project.targets.get('build');
+    let outDir = 'dist/' + projectName + '/browser'; // Default fallback
+
+    if (buildTarget && buildTarget.options && (buildTarget.options as any).outputPath) {
+      const out = (buildTarget.options as any).outputPath;
+      if (typeof out === 'string') {
+        outDir = out;
+      } else if (out.base) {
+        outDir = out.base + (out.browser ? '/' + out.browser : '/browser');
+      }
+    }
+
+    const pkgPath = '/package.json';
+    const buffer = tree.read(pkgPath);
+    if (!buffer) {
+      context.logger.warn('Could not find package.json to add script.');
+      return;
+    }
+
+    const pkgJson = JSON.parse(buffer.toString('utf-8'));
+    if (!pkgJson.scripts) {
+      pkgJson.scripts = {};
+    }
+
+    const scriptCommand = `ng-image-optimizer-aot --dist ${outDir}`;
+    if (!pkgJson.scripts['optimize:image']) {
+      pkgJson.scripts['optimize:image'] = scriptCommand;
+      tree.overwrite(pkgPath, JSON.stringify(pkgJson, null, 2));
+      context.logger.info(`✅ Added optimize:image script to package.json`);
+    } else {
+      context.logger.info(`✅ optimize:image script already exists`);
     }
   };
 }

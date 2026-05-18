@@ -1,7 +1,8 @@
 import type { ImageLoader, ImageLoaderConfig } from '@angular/common';
 import { IMAGE_CONFIG, IMAGE_LOADER } from '@angular/common';
-import type { Provider } from '@angular/core';
+import { type Provider } from '@angular/core';
 import { deviceSizes, imageSizes } from '../server/size-config';
+
 /**
  * Matches the server optimizer query shape (`validateParams`):
  * `GET <routePrefix>?url=<href>&w=<px>&q=<1-100>`.
@@ -18,7 +19,25 @@ export interface ImageOptimizerLoaderOptions {
   defaultWidth?: number;
   /** Used when `loaderParams` has no `q` / `quality`. Default `90`. */
   defaultQuality?: number;
+  /**
+   * Allowed widths for the `w` query param. Defaults to `[16, 32, 48, 64, 96, 128, 256, 384, 640, 750, 828, 1080, 1200, 1440, 1920, 2048]`.
+   *
+   * @example
+   * ```ts
+   * provideImageOptimizerLoader({
+   *   widths: [64, 128, 256, 512, 1024, 2048]
+   * })
+   * ```
+   */
+  widths?: number[];
+
+  /**
+   * The resolution of the placeholder image. Default `30`.
+   */
+  placeholderResolution?: number;
 }
+
+// ─── Runtime URL builder ─────────────────────────────────────────────────────
 
 function buildOptimizerUrl(
   routePrefix: string,
@@ -45,6 +64,8 @@ function buildOptimizerUrl(
   const prefix = routePrefix.startsWith('/') ? routePrefix : `/${routePrefix}`;
   return `${prefix}?url=${urlParam}&w=${w}&q=${qClamped}`;
 }
+
+// ─── Public API ──────────────────────────────────────────────────────────────
 
 /**
  * `ImageLoader` for `NgOptimizedImage` that matches the server's query contract (`url`, `w`, `q`).
@@ -73,7 +94,8 @@ export function provideImageOptimizerLoader(options: ImageOptimizerLoaderOptions
     {
       provide: IMAGE_CONFIG,
       useValue: {
-        breakpoints: [...imageSizes, ...deviceSizes],
+        breakpoints: options.widths ? options.widths : [...imageSizes, ...deviceSizes],
+        placeholderResolution: options.placeholderResolution ?? 30,
       },
     },
   ];

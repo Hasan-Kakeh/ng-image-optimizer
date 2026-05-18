@@ -140,6 +140,33 @@ a:hover {
   padding: 24px 0;
   transition: width var(--transition-normal);
   z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+.sidebar-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-secondary);
+}
+
+.sidebar-container::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
 }
 
 @media (max-width: 768px) {

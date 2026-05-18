@@ -1,67 +1,72 @@
 # 🖼️ NgImageOptimizer
 
-**NgImageOptimizer** is a high-performance image optimization library for Angular SSR applications. It bridges the gap between Angular's `NgOptimizedImage` and server-side processing using [sharp](https://sharp.pixelplumbing.com/), providing a Next.js-like image optimization experience.
+**NgImageOptimizer** is a high-performance image optimization library for Angular applications. It bridges the gap between Angular's `NgOptimizedImage` directive and actual image processing — bringing Next.js-level optimization natively to your Angular projects, without relying on third-party CDNs like Cloudinary or Imgix.
 
 ---
 
-[**📖 View Documentation**](https://hasan-kakeh.github.io/ng-image-optimizer/)
+[**📖 View Documentation**](https://hasan-kakeh.github.io/ng-image-optimizer/) &nbsp;·&nbsp; [**npm**](https://www.npmjs.com/package/ng-image-optimizer) &nbsp;·&nbsp; [**GitHub**](https://github.com/Hasan-Kakeh/ng-image-optimizer)
 
 ---
 
 ## 🧐 Why NgImageOptimizer?
 
-Angular's `NgOptimizedImage` is great, but it requires an external image loader (like Cloudinary or Imgix) to perform actual optimizations like resizing and format conversion. **NgImageOptimizer** brings that power to your own Angular SSR server, allowing you to:
+Angular's `NgOptimizedImage` directive handles lazy loading and `fetchpriority` correctly, but it does **not** resize or compress your images — that still requires an external loader. **NgImageOptimizer** brings that processing in-house, so you can:
 
-- 🚀 **Self-host** your image optimization service.
+- 🚀 **Self-host** your entire image optimization pipeline — no CDN subscriptions.
 - 📉 **Reduce LCP** with automatic resizing and modern formats (WebP/AVIF).
-- 💾 **Optimize once, serve many** with advanced LRU file caching.
-- 🛡️ **Stay secure** with domain allowlists and SVG protection.
-- 🌍 **Remote Image Support**: Securely fetch and optimize images from external domains via allowlists.
-- 🛠️ **Automated Setup**: Includes an `ng add` schematic for zero-config integration.
+- ⚡ **Zero runtime overhead** for static sites using the AOT build mode.
+- 💾 **Optimize once, serve many** with advanced LRU file caching (SSR mode).
+- 🛡️ **Stay secure** with domain allowlists, CSP headers, and SVG protection.
+- 🛠️ **Automated Setup** via `ng add` schematic for zero-config integration.
 
 ---
 
-### Prerequisites
+## 🔀 Two Engines, One Library
 
-- Node.js (v18+)
-- Angular CLI
-- Angular SSR
+Version 1.0.0 introduces a fully tree-shakable **dual-engine architecture**. Choose the mode that fits your deployment target:
+
+|                      | SSR / Dynamic Mode                        | AOT / Build Mode                             |
+| :------------------- | :---------------------------------------- | :------------------------------------------- |
+| **Best for**         | SSR apps, dynamic platforms, user uploads | SSG, Jamstack, GitHub Pages, Vercel, Netlify |
+| **Processing**       | At request time via Express middleware    | At build time via CLI script                 |
+| **Runtime overhead** | Minimal (mitigated by caching)            | Zero                                         |
+| **Output formats**   | WebP / AVIF                               | WebP / AVIF / JPEG                           |
+| **Dynamic content**  | ✅                                        | ❌                                           |
 
 ---
 
 ## 🚦 Quick Start
 
-The fastest way to get started is using our automated schematic:
+The fastest way to get started is using the automated schematic:
 
 ```bash
 ng add ng-image-optimizer
 ```
 
----
-
-This command will:
-
-1. Install necessary dependencies (`sharp`).
-2. Register the image loader in your `app.config.ts`.
-3. Configure the optimization middleware in your Express `server.ts`.
+This will install dependencies, register the image loader in `app.config.ts`, and configure the middleware in `server.ts`.
 
 ---
 
-### 🛠️ Manual Setup
+## ⚙️ SSR / Dynamic Mode
 
-If you prefer to configure things manually, follow these steps:
+Best for Angular Universal / SSR applications that need runtime image processing.
 
-Install the library and its peer dependencies:
+### Prerequisites
+
+- Node.js v18+
+- Angular CLI
+- Angular SSR (`@angular/ssr`)
+
+### Installation
 
 ```bash
 npm install ng-image-optimizer sharp
 ```
 
-#### Client-Side Configuration
-
-Register the image loader in your `app.config.ts`:
+### Client Configuration (`app.config.ts`)
 
 ```typescript
+import { ApplicationConfig } from '@angular/core';
 import { provideImageOptimizerLoader } from 'ng-image-optimizer';
 
 export const appConfig: ApplicationConfig = {
@@ -73,73 +78,175 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-#### Server-Side Configuration
+### Server Configuration (`server.ts`)
 
-Add the middleware to your `server.ts` before other routes:
+Add the middleware **before** your Angular SSR handler:
 
 ```typescript
 import { imageOptimizerHandler } from 'ng-image-optimizer/server';
 
-// ... early in your express app setup
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
-server.get('/_ng/image', imageOptimizerHandler(browserDistFolder));
+server.get(
+  '/_ng/image',
+  imageOptimizerHandler(browserDistFolder, {
+    minimumCacheTTL: 60 * 60 * 24, // 24 hours
+  }),
+);
 ```
+
+### Client Provider Options (`ImageOptimizerLoaderOptions`)
+
+| Property         | Type     | Default      | Description                                               |
+| :--------------- | :------- | :----------- | :-------------------------------------------------------- |
+| `routePrefix`    | `string` | `/_ng/image` | Path where the optimizer middleware is mounted.           |
+| `defaultWidth`   | `number` | `1080`       | Fallback width if `NgOptimizedImage` doesn't provide one. |
+| `defaultQuality` | `number` | `90`         | Default compression quality (1–100).                      |
+
+### Server Middleware Options (`ImageConfig`)
+
+| Property                 | Type                       | Default                                   | Description                                                       |
+| :----------------------- | :------------------------- | :---------------------------------------- | :---------------------------------------------------------------- |
+| `deviceSizes`            | `number[]`                 | `[640, 750, 828, 1080, 1200, 1920, 2048]` | Allowed widths for device breakpoints.                            |
+| `imageSizes`             | `number[]`                 | `[16, 32, 48, 64, 96, 128, 256, 384]`     | Allowed widths for smaller UI elements.                           |
+| `remotePatterns`         | `RemotePattern[]`          | `[]`                                      | Allowlist of external domains to fetch images from.               |
+| `localPatterns`          | `LocalPattern[]`           | `[]`                                      | Allowlist of local path patterns to process.                      |
+| `minimumCacheTTL`        | `number`                   | `14400`                                   | Minimum cache duration in seconds (default: 4 hours).             |
+| `formats`                | `string[]`                 | `['image/webp']`                          | Preferred output formats. Supports `image/webp` and `image/avif`. |
+| `dangerouslyAllowSVG`    | `boolean`                  | `false`                                   | Whether to allow SVG processing.                                  |
+| `contentSecurityPolicy`  | `string`                   | `...`                                     | CSP header applied to image responses.                            |
+| `contentDispositionType` | `'inline' \| 'attachment'` | `'inline'`                                | How the browser handles the image response.                       |
+| `maxCacheSize`           | `number`                   | `52428800`                                | Maximum LRU memory cache size in bytes (default: 50MB).           |
 
 ---
 
-<!-- ## ✨ Features
+## 🏗️ AOT / Build Mode
 
-- **🚀 Performance**: Automatic resizing, format conversion (WebP/AVIF), and quality adjustment.
-- **⚡ Seamless Integration**: Works directly with Angular's built-in `NgOptimizedImage` directive.
-- **💾 Advanced Caching**: Persistent file-based caching with LRU (Least Recently Used) logic to minimize server load.
-- **🛡️ Secure by Default**: Built-in Content Security Policy (CSP) headers and SVG protection.
-- **🛠️ Automated Setup**: Includes an `ng add` schematic for zero-config integration.
-- **🌍 Remote Image Support**: Securely fetch and optimize images from external domains via allowlists.
+Best for static sites and Jamstack deployments where runtime processing is not available.
 
---- -->
+### How It Works
+
+1. The **CLI script** (`ng-image-optimizer-aot`) runs as a `postbuild` step, scanning your `dist/browser/assets/` folder and pre-compiling every image into all required responsive breakpoint variants.
+2. The **client loader** (`provideImageOptimizerLoader` with `aot` options) rewrites image paths at runtime to match the pre-compiled naming convention.
+
+Output files follow a deterministic naming pattern:
+
+```
+assets/hero.jpg  →  assets/hero.750q90.webp   (at 750px width, quality 90)
+                 →  assets/hero.1080q90.webp  (at 1080px width, quality 90)
+                 →  assets/hero.750q90.blur.webp  (blur placeholder, if enabled)
+```
+
+### Installation
+
+```bash
+npm install ng-image-optimizer
+```
+
+> No `sharp` peer dependency needed at runtime — it is only used during the build step.
+
+### Client Configuration (`app.config.ts`)
+
+```typescript
+import { ApplicationConfig } from '@angular/core';
+import { provideImageOptimizerLoader } from 'ng-image-optimizer';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideImageOptimizerLoader({
+      aot: {
+        format: 'webp',
+        quality: 90,
+        blur: true, // Enable to use pre-generated .blur.webp placeholder files
+      },
+    }),
+  ],
+};
+```
+
+### Build Script (`package.json`)
+
+```json
+{
+  "scripts": {
+    "build": "ng build",
+    "postbuild": "ng-image-optimizer-aot --dist ./dist/my-app/browser"
+  }
+}
+```
+
+### CLI Reference (`ng-image-optimizer-aot`)
+
+```bash
+npx ng-image-optimizer-aot --dist ./dist/browser [options]
+```
+
+| Flag        | Description                                    | Default                  |
+| :---------- | :--------------------------------------------- | :----------------------- |
+| `--dist`    | Path to your browser distribution folder.      | _(required)_             |
+| `--paths`   | Glob pattern for images to process.            | `**`                     |
+| `--skip`    | Glob patterns to exclude (e.g. `icons/**`).    | —                        |
+| `--quality` | Output image quality (1–100).                  | `90`                     |
+| `--format`  | Output format: `webp` \| `avif` \| `jpeg`.     | `webp`                   |
+| `--widths`  | Comma-separated responsive widths to generate. | `640,828,1080,1200,1920` |
+
+---
 
 ## 🛞 Usage
 
-Use standard Angular `NgOptimizedImage` in your templates. The library will automatically handle the resolution and optimization.
+Both modes use Angular's standard `NgOptimizedImage` directive in your templates — no template changes required when switching between engines.
+
+### Basic
 
 ```html
-<img ngSrc="/photo.jpg" width="800" height="600" priority />
+<img [ngSrc]="'/assets/hero.jpg'" width="1200" height="600" alt="Hero image" />
 ```
 
----
+### Priority (LCP images)
 
-## ⚙️ Configuration
+```html
+<img [ngSrc]="'/assets/logo.png'" width="200" height="50" priority alt="Logo" />
+```
 
-### Client Provider (`ImageOptimizerLoaderOptions`)
+### Fill Mode
 
-When registering `provideImageOptimizerLoader`, you can pass the following options:
+```html
+<div style="position: relative; height: 400px;">
+  <img [ngSrc]="'/assets/background.jpg'" fill style="object-fit: cover;" alt="Background" />
+</div>
+```
 
-| Property         | Type     | Default      | Description                                                       |
-| :--------------- | :------- | :----------- | :---------------------------------------------------------------- |
-| `routePrefix`    | `string` | `/_ng/image` | The path where the image optimizer middleware is mounted.         |
-| `defaultWidth`   | `number` | `1080`       | The default width used if `NgOptimizedImage` doesn't provide one. |
-| `defaultQuality` | `number` | `90`         | The default image quality (1-100).                                |
+### Custom Quality (SSR mode)
 
-### Server Middleware (`ImageConfig`)
+```html
+<img
+  [ngSrc]="'/assets/photo.jpg'"
+  width="800"
+  height="400"
+  [loaderParams]="{ quality: 75 }"
+  alt="Custom quality"
+/>
+```
 
-When initializing `imageOptimizerHandler`, you can pass an optional configuration object:
+### Responsive Sizes
 
-| Property                 | Type                     | Default                | Description                                  |
-| :----------------------- | :----------------------- | :--------------------- | :------------------------------------------- |
-| `deviceSizes`            | `number[]`               | `[640, 750, 828, ...]` | Allowed widths for device breakpoints.       |
-| `imageSizes`             | `number[]`               | `[16, 32, 48, ...]`    | Allowed widths for smaller UI elements.      |
-| `remotePatterns`         | `RemotePattern[]`        | `[]`                   | List of allowed external domains.            |
-| `localPatterns`          | `LocalPattern[]`         | `[]`                   | List of allowed local path patterns.         |
-| `minimumCacheTTL`        | `number`                 | `14400` (4h)           | Minimum time (seconds) to cache an image.    |
-| `formats`                | `string[]`               | `['image/webp']`       | Favored output formats (supports webp/avif). |
-| `dangerouslyAllowSVG`    | `boolean`                | `false`                | Whether to allow processing SVG images.      |
-| `contentSecurityPolicy`  | `string`                 | `...`                  | CSP headers for the served images.           |
-| `contentDispositionType` | `'inline'\|'attachment'` | `'inline'`             | How the browser should handle the image.     |
-| `maxCacheSize`           | `number`                 | `52428800` (50MB)      | Maximum size of the internal LRU cache.      |
+```html
+<img
+  [ngSrc]="'/assets/responsive.jpg'"
+  fill
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  alt="Responsive image"
+/>
+```
+
+### Blur Placeholder
+
+```html
+<img [ngSrc]="'/assets/nature.jpg'" width="800" height="600" placeholder alt="Nature photo" />
+```
 
 ---
 
 ## 📄 License
 
-ng-image-optimizer is an open source package released under the MIT license. See the LICENSE file for more information.
+`ng-image-optimizer` is open source, released under the [MIT License](./LICENSE).

@@ -10,6 +10,20 @@
       "$default": {
         "$source": "projectName"
       }
+    },
+    "mode": {
+      "type": "string",
+      "description": "The optimization mode to use.",
+      "enum": ["SSR", "AOT"],
+      "default": "SSR",
+      "x-prompt": {
+        "message": "Which image optimization strategy would you like to use?",
+        "type": "list",
+        "items": [
+          { "value": "SSR", "label": "SSR (Dynamic middleware using Express)" },
+          { "value": "AOT", "label": "AOT (Static file path rewriting for pre-generated assets)" }
+        ]
+      }
     }
   },
   "required": []

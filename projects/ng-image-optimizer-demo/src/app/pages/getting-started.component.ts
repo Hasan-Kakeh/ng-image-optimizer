@@ -1,32 +1,82 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { DOC_PAGE_STYLES } from './doc-page.styles';
 
 @Component({
   selector: 'app-getting-started',
   standalone: true,
+  imports: [RouterLink],
   template: `
     <h1>Introduction</h1>
-    <p>Optimize Images in your Angular Application using the built-in <code>NgOptimizedImage</code> directive powered by incredible sharp backend.</p>
-    
-    <h2>What is ng-image-optimizer?</h2>
-    <p>The <code>ng-image-optimizer</code> library extends Angular's native image capabilities by providing a high-performance Express middleware that intercepts image requests, processes them using the <a href="https://sharp.pixelplumbing.com/" target="_blank" class="text-link">sharp</a> library, and caches the results on disk.</p>
-    
-    <h3>Key Features</h3>
+    <p>
+      <code>ng-image-optimizer</code> extends Angular's
+      <code>NgOptimizedImage</code> with production-grade image compression, format
+      conversion, and responsive sizing — without leaving the Angular ecosystem.
+    </p>
+
+    <h2>Dual-engine architecture</h2>
+    <p>
+      Version 1.0 introduces two isolated, fully tree-shakable operational modes. Pick one
+      per application — they are not meant to run together.
+    </p>
+
+    <div class="mode-grid">
+      <div class="mode-card">
+        <h3>SSR / Dynamic Mode</h3>
+        <p>
+          Sharp-powered Express middleware optimizes images on demand at request time — resize,
+          reformat (WebP/AVIF), and cache to disk.
+        </p>
+        <p>
+          Best for SSR apps, dynamic platforms, and user-uploaded media.
+          <a routerLink="/ssr/setup">Set up SSR mode →</a>
+        </p>
+      </div>
+      <div class="mode-card">
+        <h3>AOT / Build Mode</h3>
+        <p>
+          A post-build CLI pre-generates every responsive variant at compile time. The client
+          loader points directly at static files — zero runtime image processing.
+        </p>
+        <p>
+          Best for SSG, Jamstack, GitHub Pages, Vercel, and Netlify.
+          <a routerLink="/aot/setup">Set up AOT mode →</a>
+        </p>
+      </div>
+    </div>
+
+    <h2>What both engines share</h2>
     <ul>
-      <li><strong>🚀 Performance:</strong> Automatic resizing, format conversion (WebP/AVIF), and quality adjustment.</li>
-      <li><strong>⚡ Seamless Integration:</strong> Works directly with Angular's built-in <code>NgOptimizedImage</code> directive.</li>
-      <li><strong>💾 Advanced Caching:</strong> Persistent file-based caching with LRU (Least Recently Used) logic to minimize server load.</li>
-      <li><strong>🛡️ Secure by Default:</strong> Built-in Content Security Policy (CSP) headers and SVG protection.</li>
-      <li><strong>🛠️ Automated Setup:</strong> Includes an <code>ng add</code> schematic for zero-config integration.</li>
-      <li><strong>🌍 Remote Image Support:</strong> Securely fetch and optimize images from external domains via allowlists.</li>
+      <li>
+        <strong>Breakpoint matrix:</strong> Both register Angular's
+        <code>IMAGE_CONFIG</code> with a curated width allowlist so
+        <code>srcset</code> values stay in sync with what the engine can serve.
+      </li>
+      <li>
+        <strong>CLS prevention:</strong> Width and height flow through the loader resolution
+        chain so layout stays stable while variants load.
+      </li>
+      <li>
+        <strong>NgOptimizedImage native:</strong> Drop-in <code>IMAGE_LOADER</code> providers —
+        no custom directives required.
+      </li>
     </ul>
-    
-    <h2>Why do I need it?</h2>
-    <p>While Angular provides the <code>NgOptimizedImage</code> directive to ensure images are loaded correctly with performance best-practices (lazy-loading, <code>fetchpriority</code>), <strong>it does not actually resize or compress image files on your server.</strong> You still need a backend image loader to handle the processing. That's where <code>ng-image-optimizer</code> steps in, bringing Next.js-level image optimization natively to Angular projects.</p>
+
+    <h2>Why not just NgOptimizedImage alone?</h2>
+    <p>
+      Angular's directive enforces loading best practices — lazy loading, priority hints, and
+      correct <code>srcset</code> syntax — but it does <strong>not</strong> compress or resize
+      files on disk or at the CDN edge. You still need an engine behind the loader.
+      <code>ng-image-optimizer</code> fills that gap with a Next.js-style pipeline, purpose-built
+      for Angular SSR and static deployments.
+    </p>
+
+    <div class="callout">
+      <strong>Not sure which mode?</strong>
+      Read <a routerLink="/which-mode" class="text-link">Which Mode Should I Use?</a> for a
+      decision guide, then follow <a routerLink="/installation" class="text-link">Installation</a>.
+    </div>
   `,
-  styles: [`
-    ul { margin-bottom: 24px; padding-left: 20px; color: var(--text-secondary); }
-    li { margin-bottom: 8px; }
-    strong { color: var(--text-primary); font-weight: 600; }
-  `]
+  styles: [DOC_PAGE_STYLES],
 })
 export class GettingStartedComponent {}

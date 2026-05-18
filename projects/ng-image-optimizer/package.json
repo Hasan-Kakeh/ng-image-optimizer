@@ -1,6 +1,6 @@
 {
   "name": "ng-image-optimizer",
-  "version": "0.0.10",
+  "version": "1.0.0-beta",
   "description": "High-performance image optimization for Angular SSR. Includes a custom IMAGE_LOADER for NgOptimizedImage and Express middleware powered by sharp.",
   "license": "MIT",
   "type": "commonjs",
@@ -17,6 +17,9 @@
     "lru-cache": "^11.2.7",
     "picomatch": "^4.0.4"
   },
+  "bin": {
+    "ng-image-optimizer-aot": "./aot/cli.js"
+  },
   "optionalDependencies": {
     "sharp": "^0.34.5"
   },
@@ -25,14 +28,18 @@
     "save": "dependencies"
   },
   "exports": {
-    "./schematics": "./schematics/collection.json"
+    "./schematics": "./schematics/collection.json",
+    "./aot": {
+      "require": "./aot/index.js",
+      "types": "./aot/index.d.ts"
+    }
   },
   "engines": {
     "node": ">=18 <23"
   },
   "scripts": {
     "prebuild": "ng build",
-    "build": "tsc -p tsconfig.schematics.json",
+    "build": "tsc -p tsconfig.schematics.json && tsc -p tsconfig.aot.json",
     "postbuild": "copyfiles schematics/*/schema.json schematics/*/files/** schematics/collection.json ../../dist/ng-image-optimizer/"
   },
   "keywords": [

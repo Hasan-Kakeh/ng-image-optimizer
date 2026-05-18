@@ -4,12 +4,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build ng-image-optimizer-demo && npm run test",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng-image-optimizer-aot --dist ./projects/ng-image-optimizer-demo/public --skip images/** --blur",
     "build:demo": "ng build ng-image-optimizer-demo --configuration=production --base-href=\"https://hasan-kakeh.github.io/ng-image-optimizer/\"",
     "deploy": " npx angular-cli-ghpages --dir=dist/ng-image-optimizer-demo/browser",
-    "serve:ssr:ng-image-optimizer-demo": "node dist/ng-image-optimizer-demo/server/server.mjs"
+    "serve:ssr:ng-image-optimizer-demo": "node dist/ng-image-optimizer-demo/server/server.mjs",
+    "optimize:image": "ng-image-optimizer-aot --dist dist/ng-image-optimizer-demo/browser --blur"
   },
   "private": true,
   "packageManager": "npm@10.8.2",
@@ -27,6 +28,7 @@
     "ng-image-optimizer": "file:dist/ng-image-optimizer",
     "picomatch": "^4.0.4",
     "rxjs": "~7.8.0",
+    "sharp": "^0.34.5",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

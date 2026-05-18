@@ -1,84 +1,55 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CodeBlockComponent } from '../components/code-block.component';
+import { DOC_PAGE_STYLES } from './doc-page.styles';
 
 @Component({
   selector: 'app-installation',
   standalone: true,
-  imports: [CodeBlockComponent],
+  imports: [CodeBlockComponent, RouterLink],
   template: `
     <h1>Installation</h1>
 
     <h2>Prerequisites</h2>
     <ul>
-      <li>Node.js (v18+)</li>
-      <li>Angular CLI</li>
-      <li>Angular SSR</li>
+      <li>Node.js 18+</li>
+      <li>Angular 18+ with <code>NgOptimizedImage</code></li>
+      <li>
+        <strong>SSR mode:</strong> Angular SSR with an Express server entry (<code>server.ts</code>)
+      </li>
+      <li>
+        <strong>AOT mode:</strong> A production build pipeline (no runtime server required for images)
+      </li>
     </ul>
 
-    <h2>Quick Start</h2>
-    <p>The fastest way to get started is using our automated schematic:</p>
-    <app-code-block language="bash" code="ng add ng-image-optimizer"></app-code-block>
-
-    <h2>Manual Setup</h2>
+    <h2>Quick start (schematic)</h2>
     <p>
-      If you prefer to configure things manually, first install the library and its peer
-      dependencies:
+      The fastest path is <code>ng add</code>, which installs dependencies and wires the correct
+      provider for your chosen mode:
     </p>
+    <app-code-block
+      language="bash"
+      code="ng add ng-image-optimizer --mode=SSR"
+    ></app-code-block>
+    <app-code-block
+      language="bash"
+      code="ng add ng-image-optimizer --mode=AOT"
+    ></app-code-block>
+
+    <h2>Manual install</h2>
     <app-code-block language="bash" code="npm install ng-image-optimizer sharp"></app-code-block>
-
-    <h2>2. Verify Configuration</h2>
     <p>
-      The schematic automatically configures the Angular Application and your Express server.
-      However, you can verify it manually:
+      <code>sharp</code> is required for SSR middleware and for the AOT CLI. It is listed as an
+      optional dependency but should be installed explicitly in your app.
     </p>
 
-    <h3>Application Configuration (<code>app.config.ts</code>)</h3>
-    <p>
-      Ensure the provider function is added to your app config to register the custom optimized
-      image loader:
-    </p>
-    <app-code-block language="typescript" [code]="appConfigCode"></app-code-block>
-
-    <h3>Server Middleware (<code>server.ts</code>)</h3>
-    <p>
-      The optimizer works as an Express middleware intercepting paths (defaulting to
-      <code>/_ng/image</code>).
-    </p>
-    <app-code-block language="typescript" [code]="serverCode"></app-code-block>
+    <h2>After install</h2>
+    <p>Complete mode-specific setup — only one path applies to your app:</p>
+    <ul>
+      <li><strong>SSR:</strong> <code>provideImageOptimizerLoader</code> + <code>imageOptimizerHandler</code> — see <a routerLink="/ssr/setup" class="text-link">SSR Setup</a></li>
+      <li><strong>AOT:</strong> <code>provideAotImageLoader</code> + <code>ng-image-optimizer-aot</code> postbuild — see <a routerLink="/aot/setup" class="text-link">AOT Setup</a></li>
+    </ul>
   `,
-  styles: [
-    `
-      ul {
-        margin-bottom: 24px;
-        padding-left: 20px;
-        color: var(--text-secondary);
-      }
-      li {
-        margin-bottom: 8px;
-      }
-    `,
-  ],
+  styles: [DOC_PAGE_STYLES],
 })
-export class InstallationComponent {
-  appConfigCode = `import { ApplicationConfig } from '@angular/core';
-import { provideImageOptimizerLoader } from 'ng-image-optimizer';
-
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideImageOptimizerLoader({
-      routePrefix: '/_ng/image' // Optional, matches server configuration
-    })
-  ]
-};`;
-
-  serverCode = `import express from 'express';
-import { imageOptimizerHandler } from 'ng-image-optimizer/server';
-
-const app = express();
-
-// Set up the optimizer middleware BEFORE Angular SSR handlers
-app.get('/_ng/image', imageOptimizerHandler(browserDistFolder, {
-  // Optional custom configuration overrides
-  minimumCacheTTL: 60 * 60 * 24 // 24 hours
-}));`;
-}
+export class InstallationComponent {}
