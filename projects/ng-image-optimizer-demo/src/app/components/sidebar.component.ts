@@ -26,7 +26,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         <h4 class="sidebar-title">Getting Started</h4>
         <ul class="sidebar-links">
           <li>
-            <a routerLink="/introduction" routerLinkActive="active" class="sidebar-link"
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true  }" class="sidebar-link"
               >Introduction</a
             >
           </li>
@@ -110,10 +110,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styles: [
     `
       .sidebar {
-        padding: 0 24px;
+        padding: 0 20px;
         display: flex;
         flex-direction: column;
-        gap: 32px;
+        gap: 16px;
         height: 100%;
         transition: padding var(--transition-normal);
         overflow-x: hidden;
@@ -132,7 +132,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         list-style: none;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 4px;
       }
       .sidebar-link {
         color: var(--text-secondary);
@@ -179,7 +179,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       .sidebar-footer {
         margin-top: auto;
         font-size: 0.75rem;
-        color: var(--text-secondary);
+        color: var(--text-primary);
         text-align: left;
         padding-top: 16px;
         white-space: nowrap;

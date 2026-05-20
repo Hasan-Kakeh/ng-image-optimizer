@@ -3,12 +3,16 @@ import { provideRouter, withViewTransitions, withInMemoryScrolling } from '@angu
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { provideAotImageLoader } from 'ng-image-optimizer';
+import { provideAotImageLoader, provideImageOptimizerLoader } from 'ng-image-optimizer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withViewTransitions(), withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),
+    provideRouter(
+      routes,
+      withViewTransitions(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
+    ),
     provideClientHydration(withEventReplay()),
     provideAotImageLoader({
       isDevMode: false,
